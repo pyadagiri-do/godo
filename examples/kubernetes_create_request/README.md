@@ -15,15 +15,18 @@ Output shows:
 - **HA true**: `"ha": true` in JSON
 - **HA false**: `"ha": false` in JSON
 
-## Option 2: Call real API and log request
+## Option 2: Call real API and capture request/response (6 scenarios)
 
-Uses a custom `http.RoundTripper` to log the actual HTTP request body before sending:
+Runs all combinations of version (`1.35`, `1.36`) and HA (`unset`, `true`, `false`), writes one JSON file with every request/response:
 
 ```bash
 export DIGITALOCEAN_ACCESS_TOKEN=your_token
+export OUTPUT_FILE=./captures.json   # optional, default: captures.json
 go run ./examples/kubernetes_create_request/with_api/
 ```
 
-**Warning**: This will attempt to create a real cluster (costs money). To see the request without creating:
+Output: `captures.json` with a `runs` array — each entry has scenario metadata, HTTP request body, response status/body, and cluster `ha` when created.
+
+**Warning**: This creates up to **6 real clusters** (costs money). To see the request without creating:
 - Use an invalid token to get an auth error
 - Use invalid params (e.g. non-existent region) to get a validation error before provisioning
